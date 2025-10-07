@@ -163,15 +163,17 @@ return {
 
     dap.configurations.cpp = {
       {
-        name = 'Launch file',
+        name = 'Debug Dreamcatcher in Unreal Editor',
         type = 'codelldb',
         request = 'launch',
-        program = function()
-          return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-        end,
+        program = '/Users/t.brandoli/Desktop/repos/UnrealEngine/Engine/Binaries/Mac/UnrealEditor-Mac-DebugGame.app/Contents/MacOS/UnrealEditor-Mac-DebugGame',
+        args = {
+          '/Users/t.brandoli/Desktop/repos/BIM/Dreamcatcher/Dreamcatcher.uproject',
+          '-log',
+          '-debug',
+        },
         cwd = '${workspaceFolder}',
         stopOnEntry = false,
-        args = {},
       },
     }
 

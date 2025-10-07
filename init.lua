@@ -796,6 +796,7 @@ require('lazy').setup({
     event = 'VimEnter',
     version = '1.*',
     dependencies = {
+      { 'taku25/blink-cmp-unreal' },
       -- Snippet Engine
       {
         'L3MON4D3/LuaSnip',
@@ -820,7 +821,20 @@ require('lazy').setup({
           --   end,
           -- },
         },
-        opts = {},
+        opts = {
+          sources = {
+            -- Enable the "unreal" source
+            default = { 'lsp', 'buffer', 'path', 'unreal' },
+            providers = {
+              unreal = {
+                module = 'blink-cmp-unreal',
+                name = 'unreal',
+                -- Adjust the score if you want to prioritize it over LSP
+                score_offset = 15,
+              },
+            },
+          },
+        },
       },
       'folke/lazydev.nvim',
     },
@@ -909,6 +923,50 @@ require('lazy').setup({
         vim.cmd.colorscheme 'catppuccin-mocha',
       }
     end,
+  },
+
+  {
+    'taku25/UNL.nvim',
+    lazy = false,
+    priority = 1000,
+  },
+  {
+    'taku25/UEP.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-telescope/telescope.nvim',
+      -- or "ibhagwan/fzf-lua",
+    },
+    config = function()
+      require('UEP').setup()
+    end,
+  },
+  {
+    'taku25/UBT.nvim',
+    config = function()
+      require('UBT').setup()
+    end,
+  },
+  {
+    'taku25/UCM.nvim',
+    config = function()
+      require('UCM').setup()
+    end,
+  },
+  {
+    'taku25/ULG.nvim',
+    config = function()
+      require('ULG').setup()
+    end,
+  },
+  {
+    'taku25/neo-tree-unl.nvim',
+    dependencies = {
+      'nvim-neo-tree/neo-tree.nvim',
+      'nvim-lua/plenary.nvim',
+      'nvim-tree/nvim-web-devicons', -- optional
+      'MunifTanjim/nui.nvim',
+    },
   },
 
   -- Highlight todo, notes, etc in comments
