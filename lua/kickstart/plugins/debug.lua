@@ -161,17 +161,39 @@ return {
       },
     }
 
+    -- Unreal Engine configurations
+    local function find_uprojects()
+      local cwd = vim.fn.getcwd()
+      return vim.fn.globpath(cwd, '*.uproject', false, true)
+    end
+
+    local default_engine_path = '/run/media/thomas/Crucial 2TB/UnrealEngine/Engine/Binaries/Linux/UnrealEditor-Linux-DebugGame'
+
     dap.configurations.cpp = {
       {
-        name = 'Launch file',
+        name = 'Dynamic Launch with Unreal Engine project support',
         type = 'codelldb',
         request = 'launch',
         program = function()
-          return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+          local uprojects = find_uprojects()
+          if #uprojects == 0 then
+            -- fallback: ask for executable
+            return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+          else
+            return default_engine_path
+          end
+        end,
+        args = function()
+          local uprojects = find_uprojects()
+          if #uprojects == 0 then
+            return {} -- no args if manually launching
+          else
+            -- use the first .uproject
+            return { uprojects[1], '-log', '-debug' }
+          end
         end,
         cwd = '${workspaceFolder}',
         stopOnEntry = false,
-        args = {},
       },
     }
 
