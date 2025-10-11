@@ -126,15 +126,14 @@ return {
       icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
       controls = {
         icons = {
-          pause = '⏸',
-          play = '▶',
-          step_into = '⏎',
-          step_over = '⏭',
-          step_out = '⏮',
-          step_back = 'b',
-          run_last = '▶▶',
-          terminate = '⏹',
-          disconnect = '⏏',
+          pause = '⏸ [F5]',
+          play = '▶ [F5]',
+          step_into = '⏎ [F1]',
+          step_over = '⏭ [F2]',
+          step_out = '⏮ [F3]',
+          step_back = 'b [F7]',
+          run_last = '▶▶ [F5]',
+          terminate = '⏹ [F6]',
         },
       },
     }
