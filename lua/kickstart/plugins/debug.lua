@@ -120,6 +120,30 @@ return {
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
     dapui.setup {
+      mappings = {
+        expand = { '<2-LeftMouse>' },
+        open = '<CR>',
+      },
+      layouts = {
+        {
+          elements = {
+            'stacks',
+            'scopes',
+            'breakpoints',
+            -- 'watches',
+          },
+          size = 15,
+          position = 'bottom',
+        },
+        {
+          elements = {
+            'repl',
+            'console',
+          },
+          size = 10,
+          position = 'bottom',
+        },
+      },
       -- Set icons to characters that are more likely to work in every terminal.
       --    Feel free to remove or use ones that you like more! :)
       --    Don't feel like these are good choices.
