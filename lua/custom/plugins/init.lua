@@ -18,7 +18,7 @@ return {
       vim.bo[buf].bufhidden = 'wipe'
       vim.bo[buf].filetype = 'log'
 
-      local width = math.floor(vim.o.columns * 0.9)
+      local width = math.floor(vim.o.columns * 0.5)
       local height = math.floor(vim.o.lines * 0.5)
       local row = math.floor((vim.o.lines - height) / 2)
       local col = math.floor((vim.o.columns - width) / 2)
@@ -63,6 +63,18 @@ return {
         on_exit = function(_, code)
           append { '', '--- Process exited with code ' .. code .. ' ---' }
           job_finished = true
+          if code == 0 then
+            vim.notify('✅ Build succeeded: ' .. choice, vim.log.levels.INFO)
+            -- close build window after short delay
+            vim.defer_fn(function()
+              if vim.api.nvim_win_is_valid(win) then
+                vim.api.nvim_win_close(win, true)
+              end
+              require('dap').continue()
+            end, 500)
+          else
+            vim.notify('❌ Build failed (' .. code .. ')', vim.log.levels.ERROR)
+          end
         end,
       })
 
@@ -74,4 +86,14 @@ return {
       end, { buffer = buf, nowait = true })
     end)
   end, {}),
+
+  -- Conditionally add Unreal-specific Telescope mapping
+  vim.keymap.set('n', '<leader>su', function()
+    require('telescope.builtin').find_files {
+      cwd = 'Content',
+      hidden = true,
+      no_ignore = true,
+      prompt_title = 'Unreal Assets',
+    }
+  end, { desc = '[S]earch [U]nreal Content' }),
 }
