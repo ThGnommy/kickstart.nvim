@@ -79,16 +79,16 @@ return {
       end,
       desc = 'Debug: See last session result.',
     },
-    {
-      '<F6>',
-      function()
-        require('dap').terminate()
-        require('dapui').close()
-      end,
-      desc = 'Terminate',
-      nowait = true,
-      remap = false,
-    },
+    -- {
+    --   '<F6>',
+    --   function()
+    --     require('dap').terminate()
+    --     require('dapui').close()
+    --   end,
+    --   desc = 'Terminate',
+    --   nowait = true,
+    --   remap = false,
+    -- },
   },
   config = function()
     local dap = require 'dap'
@@ -157,7 +157,7 @@ return {
           step_out = '⏮ [F3]',
           step_back = 'b [F7]',
           run_last = '▶▶ [F5]',
-          terminate = '⏹ [F6]',
+          -- terminate = '⏹ [F6]',
         },
       },
     }
@@ -184,13 +184,8 @@ return {
       },
     }
 
-    -- Unreal Engine configurations
-    local function find_uprojects()
-      local cwd = vim.fn.getcwd()
-      return vim.fn.globpath(cwd, '*.uproject', false, true)
-    end
-
-    local default_engine_path = '/run/media/thomas/Crucial 2TB/UnrealEngine/Engine/Binaries/Linux/UnrealEditor-Linux-DebugGame'
+    local unreal_utils = require 'custom.unreal-utils'
+    local uprojects = unreal_utils.find_uproject_files()
 
     dap.configurations.cpp = {
       {
@@ -198,16 +193,14 @@ return {
         type = 'codelldb',
         request = 'launch',
         program = function()
-          local uprojects = find_uprojects()
           if #uprojects == 0 then
             -- fallback: ask for executable
             return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
           else
-            return default_engine_path
+            return unreal_utils.get_default_engine_path()
           end
         end,
         args = function()
-          local uprojects = find_uprojects()
           if #uprojects == 0 then
             return {} -- no args if manually launching
           else
