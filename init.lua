@@ -517,7 +517,38 @@ require('lazy').setup({
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
-      { 'j-hui/fidget.nvim', opts = {} },
+      {
+        'j-hui/fidget.nvim',
+        opts = {},
+        config = function(_, opts)
+          local fidget = require 'fidget'
+          fidget.setup(opts)
+
+          -- Create a fake progress spinner when Telescope starts
+          local function telescope_fidget_start()
+            local handle = fidget.progress.handle.create {
+              title = 'Telescope',
+              message = 'Searching...',
+              lsp_client = { name = 'telescope.nvim' },
+            }
+
+            -- Stop spinner when Telescope finishes
+            vim.api.nvim_create_autocmd('User', {
+              pattern = 'TelescopePreviewerLoaded',
+              once = true,
+              callback = function()
+                handle:finish()
+              end,
+            })
+          end
+
+          -- Hook into Telescope start event
+          vim.api.nvim_create_autocmd('User', {
+            pattern = 'TelescopeFindPre',
+            callback = telescope_fidget_start,
+          })
+        end,
+      },
 
       -- Allows extra capabilities provided by blink.cmp
       'saghen/blink.cmp',
