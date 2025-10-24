@@ -174,6 +174,11 @@ return {
       vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
     end
 
+    vim.keymap.set('n', '<leader>ah', function()
+      local widgets = require 'dap.ui.widgets'
+      widgets.hover(nil, { border = 'rounded' }) -- options: 'single', 'double', 'rounded', 'solid', 'shadow'
+    end, { noremap = true, silent = true, desc = '[S]how Variable on cursor' })
+
     dap.adapters.codelldb = {
       type = 'server',
       port = '${port}',
@@ -210,6 +215,9 @@ return {
         end,
         cwd = '${workspaceFolder}',
         stopOnEntry = false,
+        preRunCommands = {
+          'breakpoint name configure --disable cpp_exception',
+        },
       },
     }
 
@@ -220,14 +228,5 @@ return {
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
-
-    -- Install golang specific config
-    require('dap-go').setup {
-      delve = {
-        -- On Windows delve must be run attached or it crashes.
-        -- See https://github.com/leoluz/nvim-dap-go/blob/main/README.md#configuring
-        detached = vim.fn.has 'win32' == 0,
-      },
-    }
   end,
 }
