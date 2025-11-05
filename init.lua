@@ -455,6 +455,11 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+
+      vim.keymap.set('n', '<leader>ad', function()
+        vim.diagnostic.open_float(nil, { focus = false, border = 'rounded' })
+      end, { desc = 'Show diagnostics in floating window' })
+
       vim.keymap.set('n', '<leader>ar', builtin.lsp_references, { desc = '[S]earch References' })
       vim.keymap.set('n', '<leader>ai', builtin.lsp_implementations, { desc = '[S]earch Implementations' })
       vim.keymap.set('n', '<leader>ao', '<cmd>LspClangdSwitchSourceHeader<CR>', { desc = '[S]witch between header/cpp' })
