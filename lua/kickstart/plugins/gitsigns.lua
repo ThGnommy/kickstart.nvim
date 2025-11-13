@@ -5,7 +5,22 @@
 return {
   {
     'lewis6991/gitsigns.nvim',
+    event = { 'BufReadPre', 'BufNewFile' },
     opts = {
+      watch_gitdir = {
+        interval = 1000,
+        follow_files = true,
+      },
+      attach_to_untracked = true,
+      current_line_blame = true,
+      current_line_blame_opts = {
+        virt_text = true,
+        virt_text_pos = 'eol',
+        delay = 500,
+      },
+      update_debounce = 200,
+      current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> - <summary>',
+
       on_attach = function(bufnr)
         local gitsigns = require 'gitsigns'
 

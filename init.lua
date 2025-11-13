@@ -264,55 +264,32 @@ require('lazy').setup({
 
   -- Alternatively, use `config = function() ... end` for full control over the configuration.
   -- If you prefer to call `setup` explicitly, use:
-  {
-    'lewis6991/gitsigns.nvim',
-    event = { 'BufReadPre', 'BufNewFile' },
-    config = function()
-      require('gitsigns').setup {
-        signs = {
-          add = { text = '▎' },
-          change = { text = '▎' },
-          delete = { text = '▁' },
-          topdelete = { text = '▔' },
-          changedelete = { text = '▎' },
-        },
-        signcolumn = true,
-        numhl = false,
-        linehl = false,
-        word_diff = true,
-
-        watch_gitdir = {
-          interval = 1000,
-          follow_files = true,
-        },
-        attach_to_untracked = true,
-        current_line_blame = true,
-        current_line_blame_opts = {
-          virt_text = true,
-          virt_text_pos = 'eol',
-          delay = 500,
-        },
-        current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> - <summary>',
-        update_debounce = 200,
-      }
-    end,
-  },
+  -- {
+  --   'lewis6991/gitsigns.nvim',
+  --   event = { 'BufReadPre', 'BufNewFile' },
+  --   config = function()
+  --     require('gitsigns').setup {
+  --       -- Your gitsigns configuration here ...
+  --     }
+  --   end,
+  -- },
+  --
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`.
   --
   -- See `:help gitsigns` to understand what the configuration keys do
-  { -- Adds git related signs to the gutter, as well as utilities for managing changes
-    'lewis6991/gitsigns.nvim',
-    opts = {
-      signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
-      },
-    },
-  },
+  -- { -- Adds git related signs to the gutter, as well as utilities for managing changes
+  --   'lewis6991/gitsigns.nvim',
+  --   opts = {
+  --     signs = {
+  --       add = { text = '+' },
+  --       change = { text = '~' },
+  --       delete = { text = '_' },
+  --       topdelete = { text = '‾' },
+  --       changedelete = { text = '~' },
+  --     },
+  --   },
+  -- },
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
