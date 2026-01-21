@@ -217,8 +217,6 @@ return {
         stopOnEntry = false,
         preRunCommands = {
           'breakpoint name configure --disable cpp_exception',
-          'settings set target.inline-breakpoint-strategy always',
-          'command script import "/Users/t.brandoli/Desktop/repos/debugging/lldb/data_formatters/zt_lldb_data_formatters.py"',
         },
       },
     }
