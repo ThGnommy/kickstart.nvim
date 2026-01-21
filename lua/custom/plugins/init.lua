@@ -48,9 +48,9 @@ return {
     current_job.buf = vim.api.nvim_create_buf(false, true)
     vim.bo[current_job.buf].bufhidden = 'wipe'
     vim.bo[current_job.buf].filetype = 'log'
-    local width = math.floor(vim.o.columns * 0.5)
-    local height = math.floor(vim.o.lines * 0.5)
-    local row = math.floor((vim.o.lines - height) / 2)
+    local width = math.floor(vim.o.columns * 0.8)
+    local height = math.floor(vim.o.lines * 0.4)
+    local row = vim.o.lines - height - 4
     local col = math.floor((vim.o.columns - width) / 2)
     local cwd = vim.fn.getcwd()
     local project_name = cwd:match '([^/]+)$'
@@ -62,7 +62,7 @@ return {
       height = height,
       row = row,
       col = col,
-      border = 'rounded',
+      border = 'double',
       style = 'minimal',
     })
     local cmd = 'ue4 build DebugGame'
