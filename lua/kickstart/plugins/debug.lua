@@ -210,13 +210,15 @@ return {
             return {} -- no args if manually launching
           else
             -- use the first .uproject
-            return { uprojects[1], '-log', '-debug' }
+            return { uprojects[1], '-log', '-debug', '-nosplash' }
           end
         end,
         cwd = '${workspaceFolder}',
         stopOnEntry = false,
         preRunCommands = {
           'breakpoint name configure --disable cpp_exception',
+          'settings set target.inline-breakpoint-strategy always',
+          'command script import "/Users/t.brandoli/Desktop/repos/debugging/lldb/data_formatters/zt_lldb_data_formatters.py"',
         },
       },
     }
