@@ -7,7 +7,7 @@
   UE Build Command for Neovim
 
   This module creates a user command `:UEBuild` that:
-    - Opens a floating window showing the output of `ue4 build DebugGame`
+    - Opens a floating window showing the output of `just build`
     - Highlights errors and warnings in the build output
     - Automatically closes the window on success or when pressing <Esc>
     - Close the window and kill the process using `:UEBuildStop`
@@ -65,7 +65,7 @@ return {
       border = 'double',
       style = 'minimal',
     })
-    local cmd = 'ue4 build DebugGame'
+    local cmd = 'just build'
     vim.api.nvim_buf_set_lines(current_job.buf, 0, -1, false, { 'Running: ' .. cmd, '' })
 
     local function append(data)
