@@ -121,7 +121,7 @@ return {
     -- For more information, see |:help nvim-dap-ui|
     dapui.setup {
       mappings = {
-        expand = { '<2-LeftMouse>' },
+        expand = { '<Space>' },
         open = '<CR>',
       },
       layouts = {
@@ -215,6 +215,7 @@ return {
         end,
         cwd = '${workspaceFolder}',
         stopOnEntry = false,
+        evaluationTimeout = 0.3,
         preRunCommands = {
           'breakpoint name configure --disable cpp_exception',
           'settings set target.inline-breakpoint-strategy always',
@@ -222,6 +223,88 @@ return {
         },
       },
     }
+
+    local function lldb_cmd(cmd)
+      local session = dap.session()
+      if not session then
+        print 'No debug session'
+        return
+      end
+
+      session:request('evaluate', {
+        expression = cmd,
+        context = 'repl',
+      })
+    end
+
+    local fmt_state = {
+      { name = 'Strings', cat = 'ZTStrings', enabled = false },
+      { name = 'Containers', cat = 'ZTContainers', enabled = false },
+      { name = 'Pointers', cat = 'ZTPointers', enabled = false },
+      { name = 'Objects', cat = 'ZTObjects', enabled = false },
+    }
+
+    local function render_panel(buf)
+      local lines = { 'LLDB Formatter Toggles', '' }
+
+      for i, item in ipairs(fmt_state) do
+        local mark = item.enabled and '[x]' or '[ ]'
+        table.insert(lines, string.format('%d. %s %s', i, mark, item.name))
+      end
+
+      table.insert(lines, '')
+      table.insert(lines, 'Enter → toggle')
+      table.insert(lines, 'q → close')
+
+      vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+    end
+
+    local function toggle_fmt(index, buf)
+      local item = fmt_state[index]
+      if not item then
+        return
+      end
+
+      item.enabled = not item.enabled
+
+      if item.enabled then
+        lldb_cmd('type category enable ' .. item.cat)
+      else
+        lldb_cmd('type category disable ' .. item.cat)
+      end
+
+      render_panel(buf)
+    end
+
+    vim.api.nvim_create_user_command('ZTLLDBFormattersPicker', function()
+      local buf = vim.api.nvim_create_buf(false, true)
+
+      local width = 40
+      local height = 10
+
+      local win = vim.api.nvim_open_win(buf, true, {
+        title = 'zt lldb Data Formatters',
+        title_pos = 'center',
+        relative = 'editor',
+        width = width,
+        height = height,
+        row = 15,
+        col = math.floor((vim.o.columns - width) / 2),
+        style = 'minimal',
+        border = 'rounded',
+      })
+
+      render_panel(buf)
+
+      vim.keymap.set('n', 'q', function()
+        vim.api.nvim_win_close(win, true)
+      end, { buffer = buf })
+
+      vim.keymap.set('n', '<CR>', function()
+        local line = vim.fn.line '.'
+        toggle_fmt(line - 2, buf)
+      end, { buffer = buf })
+    end, {})
 
     -- Optionally reuse same config for C and Rust:
     dap.configurations.c = dap.configurations.cpp
