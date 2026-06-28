@@ -79,16 +79,6 @@ return {
       end,
       desc = 'Debug: See last session result.',
     },
-    -- {
-    --   '<F6>',
-    --   function()
-    --     require('dap').terminate()
-    --     require('dapui').close()
-    --   end,
-    --   desc = 'Terminate',
-    --   nowait = true,
-    --   remap = false,
-    -- },
   },
   config = function()
     local dap = require 'dap'
@@ -157,7 +147,6 @@ return {
           step_out = '⏮ [F3]',
           step_back = 'b [F7]',
           run_last = '▶▶ [F5]',
-          -- terminate = '⏹ [F6]',
         },
       },
     }
