@@ -3,7 +3,7 @@
 
   :UEBuild     — runs `just build` in a floating terminal window,
                  highlights errors/warnings, auto-closes on success,
-                 then continues any active DAP session.
+                 then resumes an active DAP session or launches the first cpp config.
   :UEBuildStop — kills the ongoing build job.
 --]]
 
@@ -86,7 +86,12 @@ return {
                 if vim.api.nvim_win_is_valid(current_job.win) then
                   vim.api.nvim_win_close(current_job.win, true)
                 end
-                require('dap').continue()
+                local dap = require 'dap'
+                if dap.session() then
+                  dap.continue()
+                else
+                  dap.run(dap.configurations.cpp[1])
+                end
               end, 500)
             else
               vim.notify('Build failed (' .. code .. ')', vim.log.levels.ERROR)
