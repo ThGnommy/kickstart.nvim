@@ -160,7 +160,7 @@ return {
             '--header-insertion=never',
             '--completion-style=detailed',
             '--function-arg-placeholders',
-            '-j=8',
+            '--j=8',
             '--pch-storage=memory',
           },
         },
