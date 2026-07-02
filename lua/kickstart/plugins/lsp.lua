@@ -16,7 +16,6 @@ return {
         'mason-org/mason.nvim',
         opts = {
           ensure_installed = {
-            'clangd',
             'clang-format',
             'codelldb',
           },
@@ -150,20 +149,21 @@ return {
 
       local capabilities = require('blink.cmp').get_lsp_capabilities()
 
-      local servers = {
-        clangd = {
-          cmd = {
-            'clangd',
-            '--background-index',
-            '--background-index-priority=normal',
-            '--clang-tidy',
-            '--header-insertion=never',
-            '--completion-style=detailed',
-            '--function-arg-placeholders',
-            '--j=8',
-            '--pch-storage=memory',
-          },
+      -- clangd uses the system binary directly, bypassing Mason
+      vim.lsp.config('clangd', {
+        cmd = {
+          '/usr/bin/clangd',
+          '--background-index',
+          '-j=3',
+          '--header-insertion=iwyu',
+          '--completion-style=detailed',
+          '--compile-commands-dir=/Users/t.brandoli/Desktop/repos/BIM/Dreamcatcher',
         },
+        capabilities = capabilities,
+      })
+      vim.lsp.enable 'clangd'
+
+      local servers = {
         pyright = {},
         lua_ls = {
           settings = {
@@ -179,7 +179,7 @@ return {
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       require('mason-lspconfig').setup {
-        ensure_installed = { 'clangd' },
+        ensure_installed = {},
         automatic_installation = false,
         handlers = {
           function(server_name)
