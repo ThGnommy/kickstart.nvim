@@ -1,7 +1,7 @@
 --[[
   UEBuild: Neovim command for Unreal Engine builds
 
-  :UEBuild     — runs `just build` in a floating terminal window,
+  :UEBuild     — runs `ue4 build DebugGame` in a floating terminal window,
                  highlights errors/warnings, auto-closes on success,
                  then continues any active DAP session.
   :UEBuildStop — kills the ongoing build job.
@@ -53,7 +53,7 @@ return {
           style = 'minimal',
         })
 
-        local cmd = 'just build'
+        local cmd = 'SDL_VIDEODRIVER=x11 ue4 build DebugGame'
         vim.api.nvim_buf_set_lines(current_job.buf, 0, -1, false, { 'Running: ' .. cmd, '' })
 
         local function append(data)
