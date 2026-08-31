@@ -148,18 +148,20 @@ return {
       }
 
       local capabilities = require('blink.cmp').get_lsp_capabilities()
+      local lsp_utils = require 'custom.lsp-utils'
 
       -- clangd uses the system binary directly, bypassing Mason
       vim.lsp.config('clangd', {
         cmd = {
           '/usr/bin/clangd',
-          '--background-index',
+          '--background-index=1',
           '-j=3',
           '--header-insertion=iwyu',
           '--completion-style=detailed',
           '--compile-commands-dir=/Users/t.brandoli/Desktop/repos/BIM/Dreamcatcher',
         },
         capabilities = capabilities,
+        on_exit = lsp_utils.lsp_restart,
       })
       vim.lsp.enable 'clangd'
 
