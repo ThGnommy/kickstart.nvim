@@ -39,6 +39,5 @@ vim.opt.expandtab = true
 
 vim.o.inccommand = 'split'
 vim.o.cursorline = true
-vim.o.showtabline = 2
 vim.o.scrolloff = 10
 vim.o.confirm = true
