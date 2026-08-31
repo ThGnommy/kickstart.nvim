@@ -18,6 +18,17 @@ return {
         layout_strategy = 'vertical',
         vertical = { width = 0.8 },
       },
+
+      pickers = {
+        buffers = {
+          mappings = {
+            n = {
+              ['d'] = 'delete_buffer',
+            },
+          },
+        },
+      },
+
       extensions = {
         ['ui-select'] = { require('telescope.themes').get_dropdown() },
       },
