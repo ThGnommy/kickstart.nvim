@@ -14,6 +14,13 @@ return {
     { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
   },
   opts = {
+    -- Open files in their own tab, reusing a tab that already shows the file.
+    -- Top-level so it applies to every source, not just the filesystem one.
+    window = {
+      mappings = {
+        ['<cr>'] = 'open_tab_drop',
+      },
+    },
     filesystem = {
       window = {
         mappings = {

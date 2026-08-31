@@ -13,11 +13,59 @@ return {
     { 'nvim-telescope/telescope-ui-select.nvim' },
   },
   config = function()
+    local actions = require 'telescope.actions'
+    local action_state = require 'telescope.actions.state'
+
+    -- `:tab drop` needs a filename, so it errors (E471) on unnamed or non-file buffers.
+    -- Used by the pickers that can surface those: buffers, current_buffer_fuzzy_find.
+    local function select_tab_drop_if_file(prompt_bufnr)
+      local entry = action_state.get_selected_entry()
+      local bufnr = entry and entry.bufnr
+      if bufnr and vim.api.nvim_buf_get_name(bufnr) ~= '' and vim.bo[bufnr].buftype == '' then
+        return actions.select_tab_drop(prompt_bufnr)
+      end
+      return actions.select_default(prompt_bufnr)
+    end
+
+    -- Pickers whose <CR> means "open this file" get their own tab, reusing a tab that
+    -- already shows the file. Deliberately NOT in defaults.mappings: <CR> there is
+    -- `select_default`, which telescope-ui-select (LSP code actions), help_tags and
+    -- builtin.builtin replace with non-file behaviour.
+    local tab_drop_pickers = {
+      'find_files',
+      'git_files',
+      'oldfiles',
+      'live_grep',
+      'grep_string',
+      'diagnostics',
+      'quickfix',
+      'loclist',
+      'lsp_references',
+      'lsp_definitions',
+      'lsp_implementations',
+      'lsp_type_definitions',
+      'lsp_document_symbols',
+      'lsp_dynamic_workspace_symbols',
+    }
+
+    local function tab_drop_mappings(action)
+      return { mappings = { i = { ['<CR>'] = action }, n = { ['<CR>'] = action } } }
+    end
+
+    local picker_opts = {
+      buffers = tab_drop_mappings(select_tab_drop_if_file),
+      current_buffer_fuzzy_find = tab_drop_mappings(select_tab_drop_if_file),
+    }
+    for _, name in ipairs(tab_drop_pickers) do
+      picker_opts[name] = tab_drop_mappings(actions.select_tab_drop)
+    end
+
     require('telescope').setup {
       defaults = {
         layout_strategy = 'vertical',
         vertical = { width = 0.8 },
       },
+      pickers = picker_opts,
       extensions = {
         ['ui-select'] = { require('telescope.themes').get_dropdown() },
       },
