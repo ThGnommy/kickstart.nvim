@@ -187,20 +187,24 @@ return {
         type = 'codelldb',
         request = 'launch',
         program = function()
+          local uprojects = unreal_utils.find_uproject_files()
           if #uprojects == 0 then
-            -- fallback: ask for executable
             return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-          else
-            return unreal_utils.get_default_engine_path()
           end
+          local is_poc = uprojects[1]:find('/BIM-POC/', 1, true) ~= nil
+          local engine = is_poc and os.getenv 'UNREAL_ENGINE_POC_PATH' or unreal_utils.get_default_engine_path()
+          if not engine or engine == '' then
+            error((is_poc and 'UNREAL_ENGINE_POC_PATH' or 'UNREAL_ENGINE_PATH') .. ' is not set')
+          end
+          vim.notify('Launching ' .. engine)
+          return engine
         end,
         args = function()
+          local uprojects = unreal_utils.find_uproject_files()
           if #uprojects == 0 then
-            return {} -- no args if manually launching
-          else
-            -- use the first .uproject
-            return { uprojects[1], '-log', '-debug', '-nosplash' }
+            return {}
           end
+          return { uprojects[1], '-log', '-debug', '-nosplash', '-nosound' }
         end,
         cwd = '${workspaceFolder}',
         stopOnEntry = false,
